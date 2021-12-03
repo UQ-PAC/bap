@@ -1048,7 +1048,9 @@ let lift_special ops insn =
       ] else [] in
     exec (s1 @ s2) cond
   (* All of these are nops in User mode *)
-  | `CPS2p, _ | `DMB, _ | `DSB, _ | `HINT, _ | `PLDi12, _ -> []
+  | `CPS2p, _ | `HINT, _ | `PLDi12, _ -> []
+  | `DMB, _ -> [Bap.Std.Bil.Types.Special "DMB"]
+  | `DSB, _ -> [Bap.Std.Bil.Types.Special "DSB"]
 
   | insn,ops ->
     fail [%here] "ops %s doesn't match special insn %s"
