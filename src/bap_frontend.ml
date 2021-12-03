@@ -43,7 +43,7 @@ let plugins ctxt = Configuration.plugins ctxt
 let print_info ctxt =
   Result.return @@
   Format.printf {|
-Usage:
+Hello there mrbapman Usage:
   bap <COMMAND> [<OPTIONS>]
 
 Common options:
