@@ -305,6 +305,7 @@ module Closure(Machine : Primus.Machine.S) = struct
     | "set-symbol-value", [reg; x] -> set_value reg x
     | "symbol-of-string", [ptr] -> symbol_of_cstring ptr
     | "invoke-subroutine", args -> eval_sub args
+    | "special-insn", [option] -> Bil.Stmt.Special option
     | name,_ -> Lisp.failf "%s: invalid number of arguments" name ()
 end
 
@@ -422,7 +423,8 @@ module Primitives(Machine : Primus.Machine.S) = struct
          null-terminated string.";
       def "invoke-subroutine" (one int // all any @-> any)
         "(invoke-subroutine addr args ...) calls the subroutine
-         at the specified address."
+         at the specified address.";
+      def "special-insn" (one int @-> )
     ]
 end
 
