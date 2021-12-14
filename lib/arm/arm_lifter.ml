@@ -1049,8 +1049,11 @@ let lift_special ops insn =
     exec (s1 @ s2) cond
   (* All of these are nops in User mode *)
   | `CPS2p, _ | `HINT, _ | `PLDi12, _ -> []
-  | `DMB, _ -> [Bap.Std.Bil.Types.Special "DMB"]
-  | `DSB, _ -> [Bap.Std.Bil.Types.Special "DSB"]
+  | `DMB, _ -> 
+    [Bap.Std.Bil.Types.Special "DMB"]
+  | `DSB, _ -> 
+    Printf.eprintf "THERES A DSB HERE\n"; 
+    [Bap.Std.Bil.Types.Special "DSB"]
 
   | insn,ops ->
     fail [%here] "ops %s doesn't match special insn %s"
@@ -1148,7 +1151,9 @@ let insn_exn mem insn : bil Or_error.t =
       | #branch_insn as op -> lift_branch mem ops op
       | #special_insn as op -> lift_special ops op
 
-let lift mem insn =
+let lift mem insn = 
+  assert false; 
   try insn_exn mem insn >>| resolve_pc mem with
   | Lifting_failed msg -> errorf "%s:%s" (Basic.Insn.name insn) msg
   | exn -> of_exn ~backtrace:`Get exn
+  

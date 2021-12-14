@@ -17,13 +17,14 @@ let lifter_of_arch arch =
 
 
 let sweep ?(backend="llvm") arch mem : (mem * insn option) list Or_error.t =
+  assert false;
   let open Or_error.Monad_infix in
   Dis.with_disasm ~backend (Arch.to_string arch) ~f:(fun dis ->
-      let dis = Dis.store_asm dis in
-      let dis = Dis.store_kinds dis in
-      let lift = lifter_of_arch arch in
-      Dis.run dis mem
-        ~init:[] ~return:ident ~stopped:(fun s _ ->
+    let dis = Dis.store_asm dis in
+    let dis = Dis.store_kinds dis in
+    let lift = lifter_of_arch arch in
+    Dis.run dis mem
+    ~init:[] ~return:ident ~stopped:(fun s _ ->
             Dis.stop s (Dis.insns s)) |>
       List.map ~f:(function
           | mem, None -> mem,None

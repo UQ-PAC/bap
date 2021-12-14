@@ -179,6 +179,7 @@ let store_knowledge_in_cache digest =
 
 
 let process passes outputs project =
+  assert false;
   let autoruns = Project.passes () |>
                  List.filter ~f:Project.Pass.autorun in
   let autos = List.length autoruns in

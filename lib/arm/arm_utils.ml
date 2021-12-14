@@ -61,7 +61,7 @@ let exec
     let n = Bil.var Env.nf in
     let f = Bil.int (Word.of_bool false) in
     let t = Bil.int (Word.of_bool true) in
-    match cond with
+    match cond with  (* should this be `mccond`? *)
     | `EQ -> Bil.(z = t)
     | `NE -> Bil.(z = f)
     | `CS -> Bil.(c = t)
