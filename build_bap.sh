@@ -26,7 +26,7 @@ RET=$?
 
 # if make reinstall failed on the first time, it's likely because these exist. So destroy them
 if [ ${RET} -ne 0 ]; then
-	cd ~/.opam/4.09.0/lib
+	cd ~/.opam/$(opam switch info)/lib
 	rm -rf text-tags regular ogre monads graphlib
 	rm -rf bitvec*
 	rm -rf bare
