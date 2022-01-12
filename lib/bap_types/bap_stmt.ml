@@ -104,7 +104,7 @@ let rec pp fmt s =
   | Jmp (Exp.Var _ | Exp.Int _ as exp) ->
     fprintf fmt "@[<2>jmp@ %a@]" Bap_exp.pp exp
   | Jmp exp -> fprintf fmt "@[<2>jmp@ (%a)@]" Bap_exp.pp exp
-  | Special s -> Special.pp fmt s
+  | Special s -> Special.pp fmt s  (*! pp dealing with specials *)
   | While (cond, body) ->
     fprintf fmt "@[<v0>@[<v2>while (@[%a@]) {@;%a@]@;}@]"
       Bap_exp.pp cond pp_list body
@@ -124,7 +124,9 @@ and pp_else fmt = function
   | fs -> fprintf fmt "@[<v0>@[<v2>else {@;%a@]@;}@]" pp_list fs
 
 let pp_stmts fmt ss =
-  fprintf fmt "@[<v0>@[<v2>{@;%a@]@;}@]" pp_list ss
+  (* assert false; *)  (*! asserting false and beanos here *)
+  fprintf fmt "@[<v0>@[<v2>{@;%a@]@;}@]" pp_list ss;
+  (* fprintf fmt "beanos" *)
 
 module Stmt = struct
   open Bap_bil.Stmt

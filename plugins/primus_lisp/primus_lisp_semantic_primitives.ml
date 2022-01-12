@@ -483,6 +483,11 @@ module Primitives(CT : Theory.Core)(T : Target) = struct
         let dst = Bitvec.to_int dst + pos in
         Bap.Std.Insn.Seqnum.label dst >>=
         CT.goto
+  
+    (*! trying to make special in semantic primitives*)
+  (* let make_special lbl args =
+    (* Bap.Std.Bil.Types.Special "hello" *)
+    CT.blk lbl (seq []) (Theory.Stmt) *)
 
   let load_byte t xs =
     let mem = CT.var @@ Theory.Target.data t in
@@ -776,6 +781,7 @@ module Primitives(CT : Theory.Core)(T : Target) = struct
     | "word-width",_-> pure@@word_width s args
     | "exec-addr",_-> ctrl@@exec_addr args
     | "goto-subinstruction",_ -> ctrl@@goto_subinstruction lbl args
+    (* | "make-special",_ -> ctrl@@make_special lbl args *)
     | ("load-byte"|"memory-read"),_-> pure@@load_byte t args
     | "load-word",_-> pure@@load_word t args
     | "load-hword",_-> pure@@load_half t args
@@ -1295,3 +1301,4 @@ let enable_extraction () =
   Theory.declare ~provides:["extraction"; "primus-lisp"; "lisp"]
     ~package:"core"
     ~name:"syntax" (KB.return (module CST : Theory.Core))
+

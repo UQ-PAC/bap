@@ -50,6 +50,7 @@ and exp =
   | Set of var * ast
   | Rep of ast * ast
   | Msg of fmt list * ast list
+  (* | Spe of string *)
   | Err of string
 and fmt =
   | Lit of string

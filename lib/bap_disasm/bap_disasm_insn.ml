@@ -34,6 +34,8 @@ let affect_control_flow = prop "affect-control-flow"
 let load                = prop "load"
 let store               = prop "store"
 
+
+
 module Props = struct
   type t = Z.t [@@deriving compare]
   module Bits = struct
@@ -256,6 +258,7 @@ let write init ops =
   List.fold ~init ops ~f:(fun init f -> f init)
 
 let derive_props ?bil insn =
+  (* assert false; *)   (*! this runs*)
   let bil_kinds = match bil with
     | Some bil -> lookup_jumps bil @ lookup_side_effects bil
     | None -> [] in
