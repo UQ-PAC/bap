@@ -269,8 +269,7 @@ and has_special = List.exists ~f:is_special
 
 let lift ~enable_intrinsics:{for_all; for_unk; for_special; predicates}
     target arch mem insn =
-  Printf.printf "lift got called\n";
-  (* assert false; (* ! intrinsics assert false *) *)
+  Printf.printf "lift got called\n"; (*! edit *)
   if for_all || matches_spec predicates insn
   then Ok (create_intrinsic target mem insn)
   else
