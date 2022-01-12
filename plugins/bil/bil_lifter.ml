@@ -269,14 +269,21 @@ and has_special = List.exists ~f:is_special
 
 let lift ~enable_intrinsics:{for_all; for_unk; for_special; predicates}
     target arch mem insn =
+  Printf.printf "lift got called\n";
+  (* assert false; (* ! intrinsics assert false *) *)
   if for_all || matches_spec predicates insn
   then Ok (create_intrinsic target mem insn)
   else
     let module Target = (val target_of_arch arch) in
     match Target.lift mem insn with
     | Error _ as err -> err
-    | Ok [] when for_unk -> Ok (create_intrinsic target mem insn)
+    | Ok [] 
+      (* when for_unk  *)
+      (* -> raise (Invalid_argument "unrecognised instruction") *)
+      -> Printf.printf "unrecognised\n"; Ok []
+      (* Ok (create_intrinsic target mem insn) *)
     | Ok bil ->
+      Printf.printf "recognised?\n";
       if for_special && has_special bil
       then Ok (create_intrinsic target mem insn)
       else Ok bil
