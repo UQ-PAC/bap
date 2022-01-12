@@ -10,9 +10,6 @@
 
 (defun word () (word-width))
 
-(defun DMB (option)
-  (special-insn option))
-
 (defun MOVZXi (dst imm pos)
   (set$ dst (lshift imm pos)))
 

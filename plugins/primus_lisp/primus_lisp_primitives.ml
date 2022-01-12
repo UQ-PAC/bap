@@ -264,6 +264,7 @@ module Closure(Machine : Primus.Machine.S) = struct
 
 
   let run args =
+    (* assert false; *)
     Closure.name >>= fun name -> match name, args with
     | "reg-name",[arg] -> reg_name arg
     | "exec-addr", [addr] -> exec_addr addr
@@ -305,7 +306,8 @@ module Closure(Machine : Primus.Machine.S) = struct
     | "set-symbol-value", [reg; x] -> set_value reg x
     | "symbol-of-string", [ptr] -> symbol_of_cstring ptr
     | "invoke-subroutine", args -> eval_sub args
-    | "special-insn", [option] -> Bil.Stmt.Special option
+    (* | "useless", args ->  *)
+    (* | "special-insn", [option] -> Bap.Std.Bil.Types.Special option *)
     | name,_ -> Lisp.failf "%s: invalid number of arguments" name ()
 end
 
@@ -414,7 +416,7 @@ module Primitives(Machine : Primus.Machine.S) = struct
         "(symbol-concat X Y Z ...) returns a new symbol that is a
         concatenation of symbols X,Y,Z,... ";
       def "set-symbol-value" (tuple [sym; a] @-> a)
-        "(set-symbol-value S X) sets the value of the symbol S to X.
+        "(set-symbol-value S X) sets the   of the symbol S to X.
          Returns X";
       def "reg-name" (one int @-> sym)
         "(reg-name N) returns the name of the register with the index N";
@@ -424,7 +426,8 @@ module Primitives(Machine : Primus.Machine.S) = struct
       def "invoke-subroutine" (one int // all any @-> any)
         "(invoke-subroutine addr args ...) calls the subroutine
          at the specified address.";
-      def "special-insn" (one int @-> )
+      (* def "special-insn" (one int @-> any)
+        "returns a special instruction."; *)
     ]
 end
 
@@ -433,4 +436,5 @@ let init () =
   Primus.Components.register_generic "lisp-primitives" (module Primitives)
     ~package:"bap"
     ~desc:"Provides the core set of Primus Lisp primitives.";
+  (* assert false; *)
   Primus_lisp_ieee754.init ()

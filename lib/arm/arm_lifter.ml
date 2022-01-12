@@ -1052,7 +1052,6 @@ let lift_special ops insn =
   | `DMB, _ -> 
     [Bap.Std.Bil.Types.Special "DMB"]
   | `DSB, _ -> 
-    Printf.eprintf "THERES A DSB HERE\n"; 
     [Bap.Std.Bil.Types.Special "DSB"]
 
   | insn,ops ->
@@ -1151,8 +1150,7 @@ let insn_exn mem insn : bil Or_error.t =
       | #branch_insn as op -> lift_branch mem ops op
       | #special_insn as op -> lift_special ops op
 
-let lift mem insn = 
-  assert false; 
+let lift mem insn =
   try insn_exn mem insn >>| resolve_pc mem with
   | Lifting_failed msg -> errorf "%s:%s" (Basic.Insn.name insn) msg
   | exn -> of_exn ~backtrace:`Get exn
