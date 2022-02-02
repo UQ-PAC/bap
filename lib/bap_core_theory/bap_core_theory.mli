@@ -1303,6 +1303,9 @@ module Theory : sig
         @since 2.3.0 *)
     val value : (cls, unit Value.t) Knowledge.slot
 
+    (** the memory contents of the program. *)
+    val code : (cls, string option) Knowledge.slot
+
     include Knowledge.Value.S with type t := t
   end
 
