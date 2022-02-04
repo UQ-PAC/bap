@@ -5506,10 +5506,20 @@ module Std : sig
     type result = (t * Error.t list) Or_error.t
 
     (** [create ?backend filename] creates an image of the file specified
-        specified by the [filename]. If [backend] is equal to "auto", then
-        all backends are tried in order. If only one backend can read this
-        file (i.e., there is no ambiguity), then image is returned. If
-        [backend] is not specified, then the LLVM backend is used. *)
+        by the [filename]. If [backend] is not specified, then
+        all availabe backends are used and their information is
+        merged. If the information provided by all backends agree (i.e.,
+        there's no conflicting information), then image is returned.
+        If [backend] is an explicit file path, then it is read as an
+        OGRE file and used for loading. Otherwise, [backend] should be
+        a name of one of the backends registered either with
+        [register_backend] or [register_loader]. See
+        [available_backends] for the list of available backends.
+
+        @since 2.5.0 accepts backend accepts an explicit file path,
+        note a file path is explicit if it exists and
+        [Fn.non Filename.is_implicit].
+    *)
     val create : ?backend:string -> path -> result
 
     (** [of_string ?backend ~data] creates an image from the specified
@@ -6763,6 +6773,14 @@ module Std : sig
         (** [ops insn] gives an access to [insn]'s operands.   *)
         val ops  : ('a,'k) t -> op array
 
+        (** [subs insn] an array of subinstructions.
+
+            An instruction can contain subinstructions, which could be
+            accessed with this function. Returns an empty array if
+            there are no subinstructions.
+
+            @since 2.5.0 *)
+        val subs : ('a,'k) t -> ('a,'k) t array
       end
 
       (** Trie maps over instructions  *)
@@ -7019,6 +7037,12 @@ module Std : sig
 
       (** [slot] for accessing the sequence number of a subinstruction.  *)
       val slot : (Theory.program, t option) KB.slot
+
+
+      (** [fresh] evaluates to a freshly generated sequence number.
+
+          @since 2.5.0  *)
+      val fresh : tid knowledge
     end
 
 
@@ -8502,6 +8526,14 @@ module Std : sig
     *)
     val compute_liveness : t -> (tid, Var.Set.t) Solution.t
 
+
+    (** [flatten sub] returns [sub] in flattened form in which all
+        operands are trivial.
+        @see Blk.flatten for more information about flattening.
+
+        @since 2.5.0 *)
+    val flatten : t -> t
+
     (** other names for the given subroutine.*)
     val aliases : string list tag
 
@@ -9065,6 +9097,22 @@ module Std : sig
     (** [occurs blk after:x def] if [def] is occurs after definition
         [def] in [blk].  *)
     val occurs : t -> after:tid -> tid -> bool
+
+    (** [flatten blk] translates [blk] into the flattened form.
+        In the flattened form, all operations are applied to variables,
+        constants, or unknowns, i.e., the operands could not be compound
+        expressions. E.g.,
+        {v
+           #10 := 11 * (#9 + 13) - 17
+        v}
+        is translated to,
+        {v
+           #11 := #9 + 13
+           #12 := 11 * #11
+           #10 := #12 - 17
+        v}
+        @since 2.5.0 *)
+    val flatten : t -> t
 
     (** Builder interface.  *)
     module Builder : sig
