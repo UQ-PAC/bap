@@ -21,10 +21,10 @@ let word = Knowledge.Domain.optional "word"
     ~inspect:Bitvec_sexp.sexp_of_t
 
 let hexcode = Knowledge.Domain.optional "hexcode"
-~equal:String.equal
-~inspect:(Fn.compose sexp_of_string @@
-          String.concat_map ~sep:" " ~f:(fun c ->
-              Format.sprintf "%02x" @@ Char.to_int c))
+    ~equal:String.equal
+    ~inspect:(Fn.compose sexp_of_string @@
+              String.concat_map ~sep:" " ~f:(fun c ->
+                  Format.sprintf "%02x" @@ Char.to_int c))
 
 let name = Knowledge.Domain.optional "name"
     ~equal:String.equal
@@ -279,14 +279,6 @@ module Label = struct
     | None -> Knowledge.return Target.unknown
     | Some unit -> Knowledge.collect Unit.target unit
 
-  let _decide_name_from_possible_name : unit =
-    Knowledge.Rule.(declare ~package "name-of-possible-names" |>
-                    require possible_name |>
-                    provide name |>
-                    comment "resolves possible name");
-    Knowledge.promise name @@
-    Knowledge.resolve possible_name
-
   include (val Knowledge.Object.derive cls)
 end
 
@@ -304,9 +296,9 @@ module Semantics = struct
       ~desc:"the program semantics"
   let code = Knowledge.Class.property ~package cls "insn-code" hexcode
       ~persistent:(Knowledge.Persistent.of_binable (module struct
-                      type t = string option
-                      [@@deriving bin_io]
-                    end))
+                     type t = string option
+                     [@@deriving bin_io]
+                   end))
       ~public:true
       ~desc:"the program memory contents"
 

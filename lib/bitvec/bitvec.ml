@@ -71,6 +71,7 @@ let modulus w = {
 
 let m1 = modulus 1
 let m8 = modulus 8
+let m16 = modulus 16
 let m32 = modulus 32
 let m64 = modulus 64
 
@@ -89,6 +90,7 @@ let int x m = norm m @@ Z.of_int x [@@inline]
 let int32 x m = norm m @@ Z.of_int32 x [@@inline]
 let int64 x m = norm m @@ Z.of_int64 x [@@inline]
 let bigint x m  = norm m @@ x [@@inline]
+let bigint_unsafe x = x
 
 let append w1 w2 x y =
   let w = w1 + w2 in
@@ -431,7 +433,9 @@ let to_binary = Z.to_bits
 let pp ppf x =
   Format.fprintf ppf "%s" (to_string x)
 
-module Make(M : Modulus) : S with type 'a m = 'a = struct
+module type D = S with type 'a m = 'a
+
+module Make(M : Modulus) : D = struct
   type 'a m = 'a
   let m = M.modulus
 
@@ -501,6 +505,10 @@ module M8 = Make(struct
     let modulus = m8
   end)
 
+module M16 = Make(struct
+    let modulus = m16
+  end)
+
 module M32 = Make(struct
     let modulus = m32
   end)
@@ -508,6 +516,16 @@ module M32 = Make(struct
 module M64 = Make(struct
     let modulus = m64
   end)
+
+let modular : int -> (module D) = function
+  | 1 -> (module M1)
+  | 8 -> (module M8)
+  | 16 -> (module M16)
+  | 32 -> (module M32)
+  | 64 -> (module M64)
+  | n -> (module Make(struct
+        let modulus = modulus n
+      end))
 
 include Syntax
 let equal x y = compare x y = 0 [@@inline]

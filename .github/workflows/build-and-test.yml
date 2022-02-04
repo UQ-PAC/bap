@@ -23,16 +23,19 @@ jobs:
           dune-cache: true
 
       - name: Add the testing Repository
-        run: opam repo add bap git://github.com/BinaryAnalysisPlatform/opam-repository#testing
+        run: opam repo add bap git+https://github.com/BinaryAnalysisPlatform/opam-repository#testing
 
       - name: Pin OASIS
         run: opam pin add oasis https://github.com/BinaryAnalysisPlatform/oasis.git
 
+      - name: Install system dependencies
+        run: opam depext -u bap-extra
+
       - name: Pin BAP
         run: opam pin add bap . --no-action
 
-      - name: Install system dependencies
-        run: opam depext -u bap-extra
+      - name: Install rest of the system dependencies
+        run: opam depext -u bap
 
       - name: Install Ghidra
         run: |
