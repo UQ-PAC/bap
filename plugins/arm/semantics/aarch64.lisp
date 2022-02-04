@@ -90,8 +90,8 @@
 (defun ANDXrs (rd rn rm is) (log*?rs set$ logand rd rn rm is))
 
 
-(defun ANDWri (dst rn imm)
-  (setw dst (logand rn imm)))
+;; (defun ANDWri (dst rn imm)
+;;   (setw dst (logand rn imm)))
 
 
 (defun ADRP (dst imm)
