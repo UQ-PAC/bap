@@ -8,9 +8,12 @@ sudo apt-get install alien autoconf --yes
 BAP_VERSION=$1
 echo "version is $BAP_VERSION"
 
-
 GITHUB=https://github.com/BinaryAnalysisPlatform/
-SOURCE=$GITHUB/bap
+SOURCE=${2:-$GITHUB/bap}
+echo "source url is $SOURCE"
+BRANCH=${3:-master}
+echo "source branch is $BRANCH"
+
 BINDINGS=$GITHUB/bap-bindings
 BINARIES="bap bapbundle bapbuild bap-mc"
 PREFIX=/usr/local
@@ -38,6 +41,7 @@ sudo cp $(which ocamlfind) $PREFIX/bin
 
 
 cd bap-repo
+git checkout $BRANCH
 LLVM_VERSION=$(opam config var conf-bap-llvm:package-version)
 LLVM_CONFIG=$(opam config var conf-bap-llvm:config)
 
