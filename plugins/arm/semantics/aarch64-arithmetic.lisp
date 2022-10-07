@@ -23,14 +23,14 @@
   (add-with-carry set$ rd rn (lshift imm off) 0))
 
 (defun ADDSWri (rd rn imm off) 
-  (add-with-carry setw rd rn (lshift imm off) 0))
+  (add-with-carry/clear-base rd rn (lshift imm off) 0))
 
 ; adds shifted
 (defun ADDSXrs (rd rn rm shift) 
   (add-with-carry set$ rd rn (shift-encoded rm shift) 0))
 
 (defun ADDSWrs (rd rn rm shift) 
-  (add-with-carry set$ rd rn (shift-encoded rm shift) 0))
+  (add-with-carry/clear-base rd rn (shift-encoded rm shift) 0))
 
 ; add extended
 (defun ADDXrx (rd rn rm shift) 
