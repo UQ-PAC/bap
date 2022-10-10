@@ -255,12 +255,12 @@
 (defun MOVNWi (dst imm off) (MOVN*i setw dst imm off))
 (defun MOVNXi (dst imm off) (MOVN*i set$ dst imm off))
 
-(defmacro MOVK*i (dst reg imm off)
+(defmacro MOVK*i (set dst reg imm off)
   (let ((mask (lnot (lshift (- (lshift 1 16) 1) off))))
-    (set$ dst (logor (logand reg mask) (lshift imm off)))))
+    (set dst (logor (logand reg mask) (lshift imm off)))))
 
-(defun MOVKWi (dst reg imm off) (MOVK*i dst reg imm off))
-(defun MOVKXi (dst reg imm off) (MOVK*i dst reg imm off))
+(defun MOVKWi (dst reg imm off) (MOVK*i setw dst reg imm off))
+(defun MOVKXi (dst reg imm off) (MOVK*i set$ dst reg imm off))
 
 ;; ST...
 

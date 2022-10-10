@@ -35,16 +35,15 @@
 (defmacro add-with-carry (set rd x y c)
   "(add-with-carry rd x y c) sets rd to the result of adding x and y
    with carry bit c, and sets processor flags."
-  (let ((r (+ c y x)))
+  (let ((w (word-width rd))
+        (r (+ (coerce w c) (coerce w x) (coerce w y))))
     (set-nzcv-from-registers r x y)
     (set rd r)))
 
 (defun add-with-carry/clear-base (rd x y c)
   "(add-with-carry/clear-base rd x y c) sets rd to the result of adding x and y
    with carry bit c after clearing the base register rd, and sets processor flags."
-  (let ((r (+ c y x)))
-    (set-nzcv-from-registers r y x)
-    (setw rd r)))
+  (add-with-carry setw rd x y c))
 
 (defun add-with-carry/it-block (rd x y c cnd)
   "(add-with-carry/it-block rd x y c cnd) sets rd to the result of adding x and y
@@ -93,7 +92,9 @@
 
 (defmacro setw (reg val)
   "(set Wx V) sets a Wx register clearing the upper 32 bits."
-  (set$ (alias-base-register reg) val))
+  (let ((base (alias-base-register reg))
+        (base-width (word-width base)))
+    (set$ base (cast-unsigned base-width val))))
 
 (defun replicate-to-fill (bitv n)
   "(replicate-to-fill bitv n) returns the result of repeating bitv
