@@ -256,7 +256,8 @@
 (defun MOVNXi (dst imm off) (MOVN*i set$ dst imm off))
 
 (defmacro MOVK*i (set dst reg imm off)
-  (let ((mask (lnot (lshift (- (lshift 1 16) 1) off))))
+  (let ((width (word-width dst))
+        (mask (lnot (lshift (coerce width (ones 16)) off))))
     (set dst (logor (logand reg mask) (lshift imm off)))))
 
 (defun MOVKWi (dst reg imm off) (MOVK*i setw dst reg imm off))

@@ -28,8 +28,8 @@
   "sets the flags after an AND operation i.e. sets the carry and overflow flags to zero and the negative and zero flags based on the result"
   (set NF (msb result))
   (set ZF (is-zero result))
-  (set CF 0)
-  (set VF 0))
+  (set CF 0:1)
+  (set VF 0:1))
 
 
 (defmacro add-with-carry (set rd x y c)
@@ -92,9 +92,9 @@
 
 (defmacro setw (reg val)
   "(set Wx V) sets a Wx register clearing the upper 32 bits."
-  (let ((base (alias-base-register reg))
-        (base-width (word-width base)))
-    (set$ base (cast-unsigned base-width val))))
+  (let ((base-reg (alias-base-register reg))
+        (width (word-width base-reg)))
+    (set$ base-reg (cast-unsigned width val))))
 
 (defun replicate-to-fill (bitv n)
   "(replicate-to-fill bitv n) returns the result of repeating bitv
