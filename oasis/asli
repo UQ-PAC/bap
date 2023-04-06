@@ -1,0 +1,14 @@
+Flag asli
+ Description: Build ASLi lifter
+ Default: false
+
+Library asli_plugin
+  Build$:           flag(everything) || flag(arm)
+  Path:             plugins/asli
+  FindlibName:      bap-plugin-asli
+  BuildDepends:     bap, bap-core-theory, bap-abi, bap-arm, bap-c,
+                    core_kernel, bap-main, bap-api, monads, ppx_bap, asli.libASL
+  InternalModules:  Asli, Asli_lifter
+  DataFiles:        semantics/*.asl ($datadir/bap/asli)
+  XMETADescription: provide ASL based ARM lifter
+  XMETAExtraLines:  tags="arm, lifter"

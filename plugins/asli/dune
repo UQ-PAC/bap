@@ -1,0 +1,21 @@
+(library
+ (name bap_asli_plugin)
+ (public_name bap-asli.plugin)
+ (preprocess (pps ppx_bap))
+ (libraries
+   bap
+   bap-abi
+   bap-api
+   bap-arm
+   bap-c
+   bap-core-theory
+   bap-main
+   core_kernel
+   asli.libASL 
+   monads))
+
+(plugin
+ (name asli)
+ (package bap-asli)
+ (libraries bap-asli.plugin)
+ (site (bap-common plugins)))

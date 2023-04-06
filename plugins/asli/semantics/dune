@@ -1,0 +1,22 @@
+(install
+ (package bap-primus-lisp)
+ (section (site (bap-common asli)))
+ (files
+   prelude.asl
+   aes.asl
+   arch.asl
+   arch_decode.asl
+   arch_instrs.asl
+   barriers.asl
+   debug.asl
+   dune
+   feature.asl
+   fetchdecode.asl
+   hints.asl
+   interrupts.asl
+   memory.asl
+   override.asl
+   override.prj
+   regs.asl
+   stubs.asl
+   types.asl))
