@@ -24,7 +24,7 @@ TMPDIR=$(mktemp -d)
 eval $(opam config env)
 echo OCaml is at $(which ocaml)
 echo "Looking in the dev-repo for the current list of dependencies"
-opam pin add bap --dev-repo --yes -n
+opam pin add bap https://github.com/UQ-PAC/bap.git --yes -n
 echo "Installing System dependenices"
 opam depext bap --yes
 echo "Installing OCaml dependenices"
