@@ -24,8 +24,9 @@ TMPDIR=$(mktemp -d)
 eval $(opam config env)
 echo OCaml is at $(which ocaml)
 echo "Looking in the dev-repo for the current list of dependencies"
+opam pin add z3 4.8.7 --yes -n
 opam pin add bap https://github.com/UQ-PAC/bap.git --yes -n
-opam pin add asli https://github.com/UQ-PAC/asl-interpreter.git --yes -n
+opam pin add asli https://github.com/UQ-PAC/asl-interpreter.git#old_z3 --yes -n
 echo "Installing System dependenices"
 opam depext bap --yes
 echo "Installing OCaml dependenices"
@@ -55,6 +56,7 @@ sed -i "s/-j 2/-j 4/" oasis/common
 
 ./configure --enable-everything \
             --disable-ida \
+            --disable-primus-symbolic-executor \
             --with-llvm-version=$LLVM_VERSION \
             --with-llvm-config=$LLVM_CONFIG \
             --libdir=$PREFIX/lib/bap \
