@@ -384,6 +384,9 @@ let () =
     Config.(param_all (list string) ~doc:"load specified module" "load"
               ~default:[["posix"]]) in
 
+  let enable =
+    Config.flag "enable" ~doc:"Primus lisp semantics switch" in
+
   let semantics =
     let doc = sprintf "prepend the specified folders to the list of
       folders where semantics files are searched. Every file that has
@@ -444,6 +447,6 @@ let () =
               Out_channel.close ch);
           ppf) in
       Primus.Lisp.Semantics.enable ?stdout ();
-      if Poly.(!!semantics <> ["disable"])
+      if Poly.(!!semantics <> ["disable"]) && !!enable
       then Semantics.enable_lifter !!semantics;
       load_lisp_program !!dump paths features)
