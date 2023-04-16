@@ -26,7 +26,7 @@ echo OCaml is at $(which ocaml)
 echo "Looking in the dev-repo for the current list of dependencies"
 opam pin add z3 4.8.7 --yes -n
 opam pin add bap https://github.com/UQ-PAC/bap.git --yes -n
-opam pin add asli https://github.com/UQ-PAC/asl-interpreter.git#old_z3 --yes -n
+opam pin add asli https://github.com/UQ-PAC/asl-interpreter.git --yes -n
 echo "Installing System dependenices"
 opam depext bap --yes
 echo "Installing OCaml dependenices"
