@@ -1,6 +1,11 @@
+AtomicStart()
+  return;
+
+AtomicEnd()
+  return;
+
 bits(64) AArch64.BranchAddr(bits(64) vaddress)
     return vaddress;
-
 
 AArch64.CheckFPAdvSIMDEnabled()
     return;
@@ -318,7 +323,7 @@ integer LowestSetBit(bits(N) x)
     elsif (63 < N && x[63] == '1') then
         return 63;
     else
-        return -1;
+        return N;
 
 
 
@@ -352,21 +357,19 @@ AArch64.MemSingle[bits(64) vaddress, integer size, AccType acctype, boolean wasa
 
     _Mem[address, size, access] = value;
 
-
-bits(size) MemAtomicCompareAndSwap(bits(64) address, bits(size) expectedvalue,
-                                   bits(size) newvalue, AccType ldacctype, AccType stacctype)
-    bits(size) oldvalue = Mem[address, size DIV 8, ldacctype];
-
-    if oldvalue == expectedvalue then
-        Mem[address, size DIV 8, stacctype] = newvalue;
-    return oldvalue;
-
 bits(size) MemAtomic(bits(64) address, MemAtomicOp op, bits(size) value, AccType ldacctype, AccType stacctype)
     bits(size) newvalue;
+    //memaddrdesc = AArch64.TranslateAddressForAtomicAccess(address, size);
+    //ldaccdesc = CreateAccessDescriptor(ldacctype);
+    //staccdesc = CreateAccessDescriptor(stacctype);
+
+    AtomicStart();
 
     // All observers in the shareability domain observe the
     // following load and store atomically.
     oldvalue = Mem[address, size DIV 8, ldacctype];
+    if BigEndian() then
+        oldvalue = BigEndianReverse(oldvalue);
 
     case op of
         when MemAtomicOp_ADD   newvalue = oldvalue + value;
@@ -379,13 +382,25 @@ bits(size) MemAtomic(bits(64) address, MemAtomicOp op, bits(size) value, AccType
         when MemAtomicOp_UMIN  newvalue = if UInt(oldvalue) > UInt(value) then value else oldvalue;
         when MemAtomicOp_SWP   newvalue = value;
 
+    if BigEndian() then
+        newvalue = BigEndianReverse(newvalue);
     Mem[address, size DIV 8, stacctype] = newvalue;
+
+    AtomicEnd();
 
     // Load operations return the old (pre-operation) value
     return oldvalue;
 
-boolean AArch64.ExclusiveMonitorsPass(bits(64) address, integer size)
-    return TRUE;
+bits(size) MemAtomicCompareAndSwap(bits(64) address, bits(size) expectedvalue,
+                                   bits(size) newvalue, AccType ldacctype, AccType stacctype)
+    AtomicStart();
+    bits(size) oldvalue = Mem[address, size DIV 8, ldacctype];
+    if BigEndian() then
+        oldvalue = BigEndianReverse(oldvalue);
 
-AArch64.SetExclusiveMonitors(bits(64) address, integer size)
-    return;
+    if oldvalue == expectedvalue then
+        if BigEndian() then
+            newvalue = BigEndianReverse(newvalue);
+        Mem[address, size DIV 8, stacctype] = newvalue;
+    AtomicEnd();
+    return oldvalue;
